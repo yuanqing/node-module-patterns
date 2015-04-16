@@ -1,0 +1,22 @@
+{
+  "name": "node-module-patterns",
+  "version": "0.0.0",
+  "description": "Simple patterns for Node modules.",
+  "author": "Lim Yuan Qing",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/yuanqing/node-module-patterns.git"
+  },
+  "devDependencies": {
+    "istanbul": "^0.3.14",
+    "jshint": "^2.7.0",
+    "tape": "^4.0.0"
+  },
+  "scripts": {
+    "start": "npm run lint && npm test",
+    "lint": "jshint --verbose src/*.js test/*.js",
+    "test": "rm -rf coverage && istanbul cover -- tape test/*.js"
+  },
+  "private": true
+}
