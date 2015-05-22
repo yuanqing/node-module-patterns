@@ -5,11 +5,11 @@ var foo = function(opts) {
     return new foo(opts);
   }
   opts = opts || {};
-  opts.bar = opts.bar || 42;
-  this.opts = opts;
+  var bar = opts.bar || 42;
+  this.bar = bar;
 };
 foo.prototype.fn = function() {
-  return this.opts.bar;
+  return this.bar;
 };
 
 module.exports = foo;

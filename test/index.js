@@ -33,7 +33,7 @@ test('function returning a function', function(t) {
 test('constructor', function(t) {
   t.test('members on `this`', function(t) {
     t.plan(4);
-    var foo = require('../src/5-constructor-prototype.js');
+    var foo = require('../src/5-constructor-this.js');
     var x = foo();
     t.equals(x.fn(), 42);
     t.equals(x.bar, undefined);
@@ -46,11 +46,11 @@ test('constructor', function(t) {
     var foo = require('../src/5-constructor-prototype.js');
     var x = foo();
     t.equals(x.fn(), 42);
-    t.equals(x.opts.bar, 42);
+    t.equals(x.bar, 42);
     var y = foo({ bar: true });
     t.equals(y.fn(), true);
-    t.equals(y.opts.bar, true);
-    y.opts.bar = 'no privacy';
+    t.equals(y.bar, true);
+    y.bar = 'no privacy';
     t.equals(y.fn(), 'no privacy');
   });
 });
