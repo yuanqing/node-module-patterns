@@ -15,7 +15,7 @@
   },
   "scripts": {
     "start": "npm run lint && npm test",
-    "lint": "jshint --verbose src/*.js test/*.js",
+    "lint": "jshint --verbose examples/*.js test/*.js",
     "test": "rm -rf coverage && istanbul cover -- tape test/*.js"
   },
   "private": true
