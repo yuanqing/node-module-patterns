@@ -1,4 +1,4 @@
-# node-module-patterns [![Version](https://img.shields.io/badge/version-v0.1.0-orange.svg?style=flat)](https://github.com/yuanqing/node-module-patterns/releases) [![Build Status](https://img.shields.io/travis/yuanqing/node-module-patterns.svg?style=flat)](https://travis-ci.org/yuanqing/node-module-patterns)
+# Node Module Patterns [![Version](https://img.shields.io/badge/version-v0.1.0-orange.svg?style=flat)](https://github.com/yuanqing/node-module-patterns/releases) [![Build Status](https://img.shields.io/travis/yuanqing/node-module-patterns.svg?style=flat)](https://travis-ci.org/yuanqing/node-module-patterns)
 
 > Patterns for `module.exports`.
 
@@ -10,7 +10,7 @@
 - [Function Returning a Function](#iv-function-returning-a-function)
 - [Constructor](#v-constructor)
 
-The examples given are also available in the [`src`](https://github.com/yuanqing/node-module-patterns/blob/master/src) directory.
+All examples are available in the [`examples`](https://github.com/yuanqing/node-module-patterns/blob/master/examples) directory.
 
 ## I. Function
 
@@ -85,9 +85,7 @@ foo.fn(); //=> true
 
 ### IV. Function Returning a Function
 
-Export a function that accepts options, does some pre-processing based on the given options, before finally returning a function.
-
-The returned function has access to variables in the enclosing scope. In our example, the returned function has access to the variable `bar` in the scope of the function `foo`.
+Export a function that accepts options, does some initialisation/pre-processing based on the given options, before returning another function.
 
 ```js
 var foo = function(opts) {
@@ -113,19 +111,25 @@ var y = foo({ bar: true });
 y(); //=> true
 ```
 
+Note that the returned function has access to variables in the enclosing scope. So, in our example, the returned function has access to the variable `bar` in the scope of `foo`.
+
+This pattern can be used for procedures with an expensive initialisation phase (eg. compiling a regular expression) that would be repeated exactly for every function call if we&rsquo;d naively used the [Function](#i-function) pattern. Abstracting out the code for initialisation allows us to do the initialisation just once, rather than repeatedly.
+
 <sup>[&#8617;](#patterns)</sup>
 
 ### V. Constructor
 
-Export a constructor for an object. The constructor typically accepts options, which are used to initialise the object.
+Export a constructor for an object. The constructor typically accepts options for initialising the object.
 
 The object&rsquo;s member variables can either be defined on `this` or on the `prototype`.
 
-#### Member variables on `this`
+#### a. Member variables on `this`
 
-If member variables are defined on `this`, each instance of the object would **have its own copy** of each member variable.
+If member variables are defined on `this`, **each instance of the object would have its own copy of each member variable**.
 
-Member functions have access to variables in the enclosing scope. In our example, the function `fn` has access to the variable `bar` in the scope of the function `foo`. In this sense, we can think of `bar` as a private member variable because it cannot be accessed or modified from outside the function `foo`.
+Member functions have access to variables in the enclosing scope. This, in effect, **allows the object to have private member variables**. In our example, the member function `fn` has access to the variable `bar` in the scope of the function `foo`. So, `bar` is essentially a private member variable in that it can only be accessed and modified by the member functions defined on `this`.
+
+(Note that because of the initial `if`, the `new` keyword is not necessary when constructing an instance of `foo`.)
 
 ```js
 var foo = function(opts) {
@@ -156,11 +160,11 @@ y.fn(); //=> true
 y.bar;  //=> undefined
 ```
 
-#### Member variables on `prototype`
+#### b. Member variables on `prototype`
 
-If member variables are defined on the `prototype`, each instance of the object would **share the same copy** of each member member.
+If member variables are defined on the `prototype`, **each instance of the object would share the same copy of each member variable**.
 
-Note that private member variables are not possible with this pattern. Variables we want to share between the member functions must be attached to `this`. In our example, because we want to access the variable `bar` in the member function `fn`, we assign `bar` to `this.bar`. As a result, each instance of `foo` has a member variable `bar` which can be accessed and modified from the outside.
+This pattern **does not allow the object to have private member variables**. Any variable we want to share among the member functions must be attached to `this`. In our example, because we want to access the variable `bar` in the member function `fn`, we must assign `bar` to `this.bar`. As a result, each instance of `foo` has a member variable `bar` which can be accessed and modified from the &ldquo;outside&rdquo; (see the usage example).
 
 ```js
 var foo = function(opts) {
@@ -199,7 +203,7 @@ y.fn(); //=> 'no privacy'
 
 ## A standalone module for Node and the browser
 
-It is worth noting that if our module has no dependencies, and we want to make it available in both Node and the browser as a standalone module, we can skip the [Browserify](https://github.com/substack/node-browserify) (or [Webpack](https://github.com/webpack/webpack)) step via the following pattern:
+If our module has no dependencies, and we want to make it available in both Node and the browser as a lightweight, standalone module, we can omit the [Browserify](https://github.com/substack/node-browserify) (or [Webpack](https://github.com/webpack/webpack)) bundling step by doing the following:
 
 ```js
 (function(window) {
@@ -215,10 +219,9 @@ It is worth noting that if our module has no dependencies, and we want to make i
 })(this);
 ```
 
-In the browser, the `else` branch is taken, and so our module is attached on the `window` object as `foo`.
+In the browser, the `else` branch is taken, so our module is attached on the `window` object as `foo`:
 
 ```html
-<!-- USAGE -->
 <body>
   <script src="path/to/module.js"></script>
   <script>
