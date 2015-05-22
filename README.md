@@ -59,7 +59,7 @@ foo.fn(); //=> true
 
 ### III. Function With Members
 
-Export a function object with members. This is different from the Object Literal pattern in that the function object can itself be invoked.
+Export a function object with members. This is different from the [Object Literal](#ii-object-literal) pattern in that the function object can itself be invoked.
 
 ```js
 var foo = function() {
@@ -125,7 +125,7 @@ The object&rsquo;s member variables can either be defined on `this` or on the `p
 
 If member variables are defined on `this`, each instance of the object would **have its own copy** of each member variable.
 
-Member functions have access to variables in the enclosing scope. In our example, the function `fn` has access to the variable `bar` in the scope of the function `foo`. In this sense, we can think of `bar` as a private member variable because it *cannot* be accessed or modified from outside the function `foo`.
+Member functions have access to variables in the enclosing scope. In our example, the function `fn` has access to the variable `bar` in the scope of the function `foo`. In this sense, we can think of `bar` as a private member variable because it cannot be accessed or modified from outside the function `foo`.
 
 ```js
 var foo = function(opts) {
@@ -196,6 +196,36 @@ y.fn(); //=> 'no privacy'
 ```
 
 <sup>[&#8617;](#patterns)</sup>
+
+## A standalone module for Node and the browser
+
+It is worth noting that if our module has no dependencies, and we want to make it available in both Node and the browser as a standalone module, we can skip the [Browserify](https://github.com/substack/node-browserify) (or [Webpack](https://github.com/webpack/webpack)) step via the following pattern:
+
+```js
+(function(window) {
+
+  var foo = /* ... */
+
+  if (typeof module === 'object') {
+    module.exports = foo;
+  } else {
+    window.foo = foo;
+  }
+
+})(this);
+```
+
+In the browser, the `else` branch is taken, and so our module is attached on the `window` object as `foo`.
+
+```html
+<!-- USAGE -->
+<body>
+  <script src="path/to/module.js"></script>
+  <script>
+    // `foo` available here
+  </script>
+</body>
+```
 
 ## License
 
