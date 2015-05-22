@@ -1,8 +1,6 @@
 # node-module-patterns [![Version](https://img.shields.io/badge/version-v0.0.0-orange.svg?style=flat)](https://github.com/yuanqing/node-module-patterns/releases) [![Build Status](https://img.shields.io/travis/yuanqing/node-module-patterns.svg?style=flat)](https://travis-ci.org/yuanqing/node-module-patterns)
 
-> Simple patterns for Node modules.
-
-&hellip;or, patterns for what to assign to `module.exports`.
+> Patterns for `module.exports`.
 
 ## Patterns
 
@@ -12,7 +10,9 @@
 - [Function Returning a Function](#iv-function-returning-a-function)
 - [Constructor](#v-constructor)
 
-### I. Function
+The examples given are also available in the [`src`](https://github.com/yuanqing/node-module-patterns/blob/master/src) directory.
+
+## I. Function
 
 Export a single function.
 
@@ -59,9 +59,7 @@ foo.fn(); //=> true
 
 ### III. Function With Members
 
-Export a function object with members.
-
-This pattern is different from the *Object Literal* pattern in that the function object can itself be invoked.
+Export a function object with members. This is different from the Object Literal pattern in that the function object can itself be invoked.
 
 ```js
 var foo = function() {
@@ -89,7 +87,7 @@ foo.fn(); //=> true
 
 Export a function that accepts options, does some pre-processing based on the given options, before finally returning a function.
 
-The returned function has access to variables in the enclosing scope. In our example, the returned function has access to the variable `bar` in the scope of `foo`.
+The returned function has access to variables in the enclosing scope. In our example, the returned function has access to the variable `bar` in the scope of the function `foo`.
 
 ```js
 var foo = function(opts) {
@@ -119,15 +117,15 @@ y(); //=> true
 
 ### V. Constructor
 
-Export a constructor for an object. The constructor accepts options, which are used to initialise the object.
+Export a constructor for an object. The constructor typically accepts options, which are used to initialise the object.
 
-The object&rsquo;s member variables can be defined on `this`, or on the `prototype`.
+The object&rsquo;s member variables can either be defined on `this` or on the `prototype`.
 
-#### Members on `this`
+#### Member variables on `this`
 
-If member variables are defined on `this`, each instance of the object would **have its own copy** of each member.
+If member variables are defined on `this`, each instance of the object would **have its own copy** of each member variable.
 
-Member functions have access to variables in the enclosing scope. In our example, the function `fn` has access to the variable `bar` in the scope of the function `foo`. We can think of `bar` as a private member variable because it cannot be accessed or modified from the &ldquo;outside&rdquo;.
+Member functions have access to variables in the enclosing scope. In our example, the function `fn` has access to the variable `bar` in the scope of the function `foo`. In this sense, we can think of `bar` as a private member variable because it *cannot* be accessed or modified from outside the function `foo`.
 
 ```js
 var foo = function(opts) {
@@ -158,11 +156,11 @@ y.fn(); //=> true
 y.bar;  //=> undefined
 ```
 
-#### Members on `prototype`
+#### Member variables on `prototype`
 
-If member variables are defined on the `prototype`, each instance of the object would **share the same copy** of each member.
+If member variables are defined on the `prototype`, each instance of the object would **share the same copy** of each member member.
 
-Private member variables are not possible with this pattern. In our example, because we want to access `opts` in the member function `fn`, we assign `opts` to `this.opts`, and as a result, `opts` can be accessed and modified from the &ldquo;outside&rdquo;.
+Note that private member variables are not possible with this pattern. Variables we want to share between the member functions must be attached to `this`. In our example, because we want to access the variable `bar` in the member function `fn`, we assign `bar` to `this.bar`. As a result, each instance of `foo` has a member variable `bar` which can be accessed and modified from the outside.
 
 ```js
 var foo = function(opts) {
@@ -170,11 +168,11 @@ var foo = function(opts) {
     return new foo(opts);
   }
   opts = opts || {};
-  opts.bar = opts.bar || 42;
-  this.opts = opts;
+  var bar = opts.bar || 42;
+  this.bar = bar;
 };
 foo.prototype.fn = function() {
-  return this.opts.bar;
+  return this.bar;
 };
 
 module.exports = foo;
@@ -186,15 +184,15 @@ module.exports = foo;
 var foo = require('foo');
 
 var x = foo();
-x.fn();     //=> 42
-x.opts.bar; //=> 42
+x.fn(); //=> 42
+x.bar;  //=> 42
 
 var y = foo({ bar: true });
-y.fn();     //=> true
-y.opts.bar; //=> true
+y.fn(); //=> true
+y.bar;  //=> true
 
-y.opts.bar = 'no privacy';
-y.fn();     //=> 'no privacy'
+y.bar = 'no privacy';
+y.fn(); //=> 'no privacy'
 ```
 
 <sup>[&#8617;](#patterns)</sup>
