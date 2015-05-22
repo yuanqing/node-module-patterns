@@ -1,4 +1,4 @@
-# node-module-patterns [![Version](https://img.shields.io/badge/version-v0.0.0-orange.svg?style=flat)](https://github.com/yuanqing/node-module-patterns/releases) [![Build Status](https://img.shields.io/travis/yuanqing/node-module-patterns.svg?style=flat)](https://travis-ci.org/yuanqing/node-module-patterns)
+# node-module-patterns [![Version](https://img.shields.io/badge/version-v0.1.0-orange.svg?style=flat)](https://github.com/yuanqing/node-module-patterns/releases) [![Build Status](https://img.shields.io/travis/yuanqing/node-module-patterns.svg?style=flat)](https://travis-ci.org/yuanqing/node-module-patterns)
 
 > Patterns for `module.exports`.
 
