@@ -1,7 +1,7 @@
 {
   "name": "node-module-patterns",
   "version": "0.0.0",
-  "description": "Simple patterns for Node modules.",
+  "description": "Patterns for `module.exports`.",
   "author": "Lim Yuan Qing",
   "license": "MIT",
   "repository": {
