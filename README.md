@@ -113,7 +113,7 @@ y(); //=> true
 
 Note that the returned function has access to variables in the enclosing scope. So, in our example, the returned function has access to the variable `bar` in the scope of `foo`.
 
-This pattern can be used for procedures with an expensive initialisation phase (eg. compiling a regular expression) that would be repeated exactly for every function call if we&rsquo;d naively used the [Function](#i-function) pattern. Abstracting out the code for initialisation allows us to do the initialisation just once, rather than repeatedly.
+This pattern can be used for procedures with an expensive initialisation phase (eg. compiling a regular expression) that would be repeated exactly for every function call if we&rsquo;d naively used the [Function](#i-function) pattern. Pulling out the code for initialisation allows us to do the initialisation just once, rather than repeatedly.
 
 <sup>[&#8617;](#patterns)</sup>
 
@@ -129,7 +129,7 @@ If member variables are defined on `this`, **each instance of the object would h
 
 Member functions have access to variables in the enclosing scope. This, in effect, **allows the object to have private member variables**. In our example, the member function `fn` has access to the variable `bar` in the scope of the function `foo`. So, `bar` is essentially a private member variable in that it can only be accessed and modified by the member functions defined on `this`.
 
-(Note that because of the initial `if`, the `new` keyword is not necessary when constructing an instance of `foo`.)
+(Note that because of our initial `if` check, the `new` keyword can be omitted when constructing an instance of `foo`.)
 
 ```js
 var foo = function(opts) {
@@ -151,7 +151,7 @@ module.exports = foo;
 
 var foo = require('foo');
 
-var x = new foo();
+var x = foo();
 x.fn(); //=> 42
 x.bar;  //=> undefined
 
@@ -164,7 +164,7 @@ y.bar;  //=> undefined
 
 If member variables are defined on the `prototype`, **each instance of the object would share the same copy of each member variable**.
 
-This pattern **does not allow the object to have private member variables**. Any variable we want to share among the member functions must be attached to `this`. In our example, because we want to access the variable `bar` in the member function `fn`, we must assign `bar` to `this.bar`. As a result, each instance of `foo` has a member variable `bar` which can be accessed and modified from the &ldquo;outside&rdquo; (see the usage example).
+This pattern **does not allow the object to have private member variables**. Any variable we want to share among the member functions must be attached to `this`. In our example, because we want to access the variable `bar` in the member function `fn`, we must assign `bar` to `this.bar`. As a result, each instance of `foo` has a member variable `bar` which can be accessed and modified from the &ldquo;outside&rdquo;. (See the usage example.)
 
 ```js
 var foo = function(opts) {
