@@ -54,3 +54,19 @@ test('constructor', function(t) {
     t.equals(y.fn(), 'no privacy');
   });
 });
+
+test('pitfall', function(t) {
+  t.plan(4);
+  var foo = require('../examples/5-constructor-this.js');
+  var opts = {
+    bar: {
+      baz: true
+    }
+  };
+  var y = foo(opts);
+  t.equals(y.fn(), opts.bar);
+  t.looseEquals(y.fn(), { baz: true });
+  delete opts.bar.baz;
+  t.equals(y.fn(), opts.bar);
+  t.looseEquals(y.fn(), {});
+});
