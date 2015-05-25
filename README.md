@@ -2,7 +2,6 @@
 
 > Patterns for `module.exports`.
 
-<span id="contents"></span>
 - [Patterns](#patterns)
   - [Function](#i-function)
   - [Object Literal](#ii-object-literal)
@@ -38,7 +37,7 @@ var foo = require('foo');
 foo(); //=> 42
 ```
 
-<sup>[&#8617;](#contents)</sup>
+<sup>[&#8617;](#node-module-patterns--)</sup>
 
 ### II. Object Literal
 
@@ -63,7 +62,7 @@ var foo = require('foo');
 foo.fn(); //=> true
 ```
 
-<sup>[&#8617;](#contents)</sup>
+<sup>[&#8617;](#node-module-patterns--)</sup>
 
 ### III. Function With Members
 
@@ -91,7 +90,7 @@ foo();    //=> 42
 foo.fn(); //=> true
 ```
 
-<sup>[&#8617;](#contents)</sup>
+<sup>[&#8617;](#node-module-patterns--)</sup>
 
 ### IV. Function Returning a Function
 
@@ -127,7 +126,7 @@ y(); //=> true
 
 This pattern can be used for procedures with an expensive initialisation phase (eg. compiling a regular expression) that would be repeated exactly for every function call if we had naively used the [Function](#i-function) pattern. Pulling out the code for initialisation allows us to do the initialisation just once, rather than repeatedly.
 
-<sup>[&#8617;](#contents)</sup>
+<sup>[&#8617;](#node-module-patterns--)</sup>
 
 ### V. Constructor
 
@@ -215,7 +214,7 @@ y.bar = 'no privacy';
 y.fn(); //=> 'no privacy'
 ```
 
-<sup>[&#8617;](#contents)</sup>
+<sup>[&#8617;](#node-module-patterns--)</sup>
 
 ## A pitfall
 
@@ -270,6 +269,8 @@ opts = opts ? clone(opts) : {};
 // ...
 ```
 
+<sup>[&#8617;](#node-module-patterns--)</sup>
+
 ## Standalone modules
 
 If our module has no dependencies, and we want to make it available in *both* Node and the browser as a lightweight, standalone module, we can omit the [Browserify](https://github.com/substack/node-browserify) (or [Webpack](https://github.com/webpack/webpack)) bundling step by doing the following:
@@ -298,6 +299,8 @@ In the browser, the `else` branch is taken, so our module is attached on the `wi
   </script>
 </body>
 ```
+
+<sup>[&#8617;](#node-module-patterns--)</sup>
 
 ## License
 
